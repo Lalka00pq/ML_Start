@@ -6,4 +6,5 @@ for _ in range(500):
     function.backward()
     w.data -= alpha * w.grad
     w.grad.zero_()
-print(w.grad)
+
+print(w)
