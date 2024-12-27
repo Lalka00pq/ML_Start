@@ -57,7 +57,7 @@ def parse_annotations(xml_path: str, img_dir: str, output_dir: str):
 
 if __name__ == "__main__":
     parse_annotations(
-        xml_path="ML_Start\\src\\4-е задание\\annotations_train.xml",
-        img_dir="C:\\Users\\User\\Desktop\\ships_imgs",
+        xml_path="ML_Start\\src\\4-е задание\\annotations.xml",
+        img_dir="C:\\Users\\User\\Desktop\\Data_planes_ships\\aircrafts\\test_airplanes",
         output_dir="C:\\Users\\User\\Desktop"
     )
