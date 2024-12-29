@@ -7,9 +7,29 @@ import cv2
 import torch
 # project
 from PIL import Image
+import numpy as np
+
+
+class OpenCVTransform:
+    def __init__(self, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]):
+        self.mean = np.array(mean, dtype=np.float32)
+        self.std = np.array(std, dtype=np.float32)
+
+    def __call__(self, img):
+        img = cv2.resize(img, (224, 224))  # Resize directly to 224x224
+        img = img.astype(np.float32) / 255.0
+        img = (img - self.mean) / self.std
+        img = img.transpose(2, 0, 1)  # Convert to (C, H, W)
+        return torch.from_numpy(img)
 
 
 def show_image_results(classes_name: list, predicted: Any) -> None:
+    '''Метод для отображения результата классификации изображения
+    Args:
+        classes_name (list): Список классов
+        predicted (Any): Предсказание класса
+    Returns: None : Выводит результат классификации
+    '''
     print(f"Predicted class: {classes_name[predicted.item()]}")
 
 
@@ -25,19 +45,20 @@ def inference_classifier(classifier: str, device: str, path_to_image: str) -> st
     """
     model = torch.load(classifier, map_location=device)
     model.eval()
-    transform = transforms.Compose([
-        transforms.Resize(256),
-        transforms.CenterCrop(224),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[
-                             0.229, 0.224, 0.225])
-    ])
+    # transform = transforms.Compose([
+    #     transforms.Resize(256),
+    #     transforms.CenterCrop(224),
+    #     transforms.ToTensor(),
+    #     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[
+    #                          0.229, 0.224, 0.225])
+    # ])
     # Переделать через OpenCV
-    img = Image.open(path_to_image)
-
-    img = transform(img).unsqueeze(0)
+    transform = OpenCVTransform()
+    img = cv2.imread(path_to_image)
+    image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    image = transform(image).unsqueeze(0).to(device)
     with torch.no_grad():
-        outputs = model(img)
+        outputs = model(image)
         _, predicted = torch.max(outputs, 1)
     return predicted
 
@@ -128,13 +149,13 @@ def main() -> None:
     classifier, device = load_classifier(name_of_classifier=name_of_classifier,
                                          path_to_pth_weights=path_to_weights,
                                          device=use_cuda)
-    inference_classifier(classifier=classifier,
-                         device=device, path_to_image=path_to_content)
+    pred = inference_classifier(classifier=classifier,
+                                device=device, path_to_image=path_to_content)
 
 
 if __name__ == '__main__':
 
-    pred = inference_classifier('ML_Start\\src\\5-е задание\\best_model_ResNet18_2.pth', 'cpu',
-                                path_to_image='ML_Start\\src\\5-е задание\\boat40_ship_156_123.jpg')
+    pred = inference_classifier(classifier='./best_model_ResNet18_2.pth', device='cpu',
+                                path_to_image='1.png')
     classes_name = ['aircraft', 'ship']
     show_image_results(classes_name=classes_name, predicted=pred)
