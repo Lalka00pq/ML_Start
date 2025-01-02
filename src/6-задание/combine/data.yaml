@@ -1,6 +1,0 @@
-path: C:\Users\User\Desktop\ML_projects\ML_Start_Caisar\ML_Start\src\6-задание\combine
-train: obj_Train_data
-val: obj_Test_data
-test: obj_Test_data
-name:
-  0: object
