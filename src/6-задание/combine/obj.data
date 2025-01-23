@@ -1,4 +1,4 @@
-classes = 2
+classes = 1
 Train = data/Train.txt
 Test = data/Test.txt
 names = data/obj.names

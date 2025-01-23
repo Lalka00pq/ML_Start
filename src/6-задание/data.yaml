@@ -4,4 +4,3 @@ val: test
 test: test
 names:
   0: object
-  1: object
