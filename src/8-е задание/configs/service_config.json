@@ -1,0 +1,15 @@
+{
+    "service_params": {    
+        "target_width": 1920,
+        "target_height": 1080
+    }, 
+    "logging_params": {
+        "save_logs": false,
+        "logs_directory": ".\\logs",
+        "logging_config": ".\\src\\log_config.yaml"
+    }, 
+    "common_params": {
+        "host": "localhost",
+        "port": 8000
+    }
+}
