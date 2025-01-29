@@ -8,6 +8,8 @@ from fastapi import FastAPI
 # project
 from routers.api_info import router as InfoRouter
 from routers.api_resize_image import router as ResizeImageRouter
+from routers.api_get_detector_classifier import router_detect as DetectorRouter
+from routers.api_get_detector_classifier import router_classifier as ClassifierRouter
 
 if sys.platform.startswith("win"):
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
@@ -23,7 +25,8 @@ api_v1_prefix = ""
 
 app.include_router(InfoRouter, prefix=api_v1_prefix)
 app.include_router(ResizeImageRouter, prefix=api_v1_prefix)
-
+app.include_router(DetectorRouter, prefix=api_v1_prefix)
+app.include_router(ClassifierRouter, prefix=api_v1_prefix)
 app.docs_url = "/docs"
 app.redoc_url = "/redocs"
 app.setup()

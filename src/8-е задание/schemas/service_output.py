@@ -23,3 +23,13 @@ class ServiceOutput(pydantic.BaseModel):
     """Высота преобразованного изображения"""
     channels: int = pydantic.Field(default=3)
     """Число каналов преобразованного изображения"""
+
+
+class DetectedAndClassifiedObject(pydantic.BaseModel):
+    """ Датакласс данных которые будут возвращены сервисом (детекция и классификация) """
+
+    object_name: str = pydantic.Field(default="None")
+    """ Название объекта """
+    object_bbox: tuple = pydantic.Field(
+        default='None')  # пока не понятно в каком формате будут координаты
+    """ Координаты bounding box объекта """

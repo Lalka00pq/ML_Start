@@ -41,10 +41,21 @@ class ServiceConfig(BaseModel):
     """Общие настройки сервиса (хост, порт)"""
 
 
-class Getter(BaseModel):
-    """Датакласс, описывающий параметры запроса"""
+class DetectorParams(BaseModel):
+    """Датакласс, описывающий параметры детектора"""
 
-    detector: str
-    """Детектор"""
-    classifier: str
-    """Классификатор"""
+    detector_name: str = Field(default="Yolo11")
+    """Название детектора"""
+    detector_path: str = Field(
+        default=r"\models\detectors\yolo11_detector.onnx")
+    """Путь к файлу детектора (формат ONNX)"""
+
+
+class ClassifierParams(BaseModel):
+    """Датакласс, описывающий параметры классификатора"""
+
+    classifier_name: str = Field(default="resnet18")
+    """Название классификатора"""
+    classifier_path: str = Field(
+        default=r"\models\classifiers\resnet18_classifier.onnx")
+    """Путь к файлу классификатора (формат ONNX)"""
