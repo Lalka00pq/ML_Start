@@ -3,6 +3,7 @@ from datetime import datetime
 
 # 3rdparty
 import pydantic
+from typing import List
 
 
 class HealthCheck(pydantic.BaseModel):
@@ -25,11 +26,20 @@ class ServiceOutput(pydantic.BaseModel):
     """Число каналов преобразованного изображения"""
 
 
+class DetectedObject(pydantic.BaseModel):
+    '''Датакласс для описания найденного объекта'''
+    label: str
+    confidence: float
+    xmin: int
+    ymin: int
+    xmax: int
+    ymax: int
+
+
 class DetectedAndClassifiedObject(pydantic.BaseModel):
     """ Датакласс данных которые будут возвращены сервисом (детекция и классификация) """
 
     object_name: str = pydantic.Field(default="None")
     """ Название объекта """
-    object_bbox: tuple = pydantic.Field(
-        default='None')  # пока не понятно в каком формате будут координаты
-    """ Координаты bounding box объекта """
+    object_bbox: List[DetectedObject] | None
+    """ Координаты объекта """
