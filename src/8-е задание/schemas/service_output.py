@@ -38,8 +38,5 @@ class DetectedObject(pydantic.BaseModel):
 
 class DetectedAndClassifiedObject(pydantic.BaseModel):
     """ Датакласс данных которые будут возвращены сервисом (детекция и классификация) """
-
-    object_name: str = pydantic.Field(default="None")
-    """ Название объекта """
     object_bbox: List[DetectedObject] | None
     """ Координаты объекта """
