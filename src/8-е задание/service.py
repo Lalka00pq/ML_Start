@@ -10,8 +10,8 @@ import uvicorn
 from pydantic import TypeAdapter
 
 # project
-from src.tools.logging_tools import configure_service_logger
-from src.schemas.service_config import ServiceConfig
+from tools.logging_tools import configure_service_logger
+from schemas.service_config import ServiceConfig
 
 
 class Server(uvicorn.Server):
@@ -34,7 +34,7 @@ class Server(uvicorn.Server):
 def get_service(
     service_config: ServiceConfig,
     num_workers: int = 0,
-    reload: bool = False,
+    reload: bool = True,
 ) -> Server:
     """Функция для инициализации FastAPI-сервиса в рамках uvicorn
 
@@ -47,7 +47,7 @@ def get_service(
         * `Server`: объект Server
     """
     config = uvicorn.Config(
-        "src.app:app",
+        "app:app",
         host=service_config.common_params.host,
         port=service_config.common_params.port,
         log_level=logging.INFO,
@@ -63,13 +63,14 @@ def get_service(
 def main() -> None:
     """Точка инициализации сервиса"""
 
-    service_config = r"src\configs\service_config.json"
+    service_config = r".\configs\service_config.json"
 
     with open(service_config, "r") as json_service_config:
         service_config_dict = json.load(json_service_config)
 
     service_config_adapter = TypeAdapter(ServiceConfig)
-    service_config_python = service_config_adapter.validate_python(service_config_dict)
+    service_config_python = service_config_adapter.validate_python(
+        service_config_dict)
 
     get_service(service_config_python).run()
 

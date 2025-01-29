@@ -9,7 +9,7 @@ from rich import console
 from rich.logging import RichHandler
 
 # project
-from src.schemas.service_config import ServiceConfig
+from schemas.service_config import ServiceConfig
 
 LogLevelTypes: TypeAlias = (
     Literal[
@@ -86,15 +86,18 @@ def configure_service_logger(
     else:
         if not os.path.exists(service_config.logging_params.logs_directory):
             logger.info(
-                f"Директория для сохранения логов {service_config.logging_params.logs_directory} не найдена"
+                f"Директория для сохранения логов {
+                    service_config.logging_params.logs_directory} не найдена"
             )
             os.makedirs(service_config.logging_saving_settings.logs_directory)
             logger.info(
-                f"Директория для сохранения логов создана: {service_config.logging_saving_settings.logs_directory}"
+                f"Директория для сохранения логов создана: {
+                    service_config.logging_saving_settings.logs_directory}"
             )
         else:
             logger.info(
-                f"Директория для сохранения логов: {service_config.logging_saving_settings.logs_directory}"
+                f"Директория для сохранения логов: {
+                    service_config.logging_saving_settings.logs_directory}"
             )
 
         logfile_handler = TimedRotatingFileHandler(

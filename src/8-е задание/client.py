@@ -1,6 +1,6 @@
 import requests
 
-path_to_image = r"D:\Repositories\arscis-deep-learning\src\.test_datasets\wagons_numbers\vmtp1_20210610051511_0515_1_00244000.jpg"
+path_to_image = r"C:\Users\User\Desktop\ML_projects\ML_Start_Caisar\ML_Start\src\7-е задание\images.jpg"
 images = {"image": open(path_to_image, "rb")}
 
 response = requests.post("http://127.0.0.1:8000/resize_image", files=images)

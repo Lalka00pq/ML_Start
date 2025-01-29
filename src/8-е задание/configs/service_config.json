@@ -6,7 +6,7 @@
     "logging_params": {
         "save_logs": false,
         "logs_directory": ".\\logs",
-        "logging_config": ".\\src\\log_config.yaml"
+        "logging_config": ".\\log_config.yaml"
     }, 
     "common_params": {
         "host": "localhost",

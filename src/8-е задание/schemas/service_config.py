@@ -39,3 +39,12 @@ class ServiceConfig(BaseModel):
     """Параметры логирования"""
     common_params: CommonParams = Field(default=CommonParams())
     """Общие настройки сервиса (хост, порт)"""
+
+
+class Getter(BaseModel):
+    """Датакласс, описывающий параметры запроса"""
+
+    detector: str
+    """Детектор"""
+    classifier: str
+    """Классификатор"""

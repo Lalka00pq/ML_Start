@@ -6,14 +6,14 @@ import sys
 from fastapi import FastAPI
 
 # project
-from src.routers.api_info import router as InfoRouter
-from src.routers.api_resize_image import router as ResizeImageRouter
+from routers.api_info import router as InfoRouter
+from routers.api_resize_image import router as ResizeImageRouter
 
 if sys.platform.startswith("win"):
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 app = FastAPI(
-    title="Resize Image API",
+    title="Detection and Classification Ships/Planes API",
     version="0.1.0",
     description="",
     docs_url=None,

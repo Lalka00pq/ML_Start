@@ -5,7 +5,7 @@ from datetime import datetime
 from fastapi import APIRouter, status
 
 # project
-from src.schemas.service_output import HealthCheck
+from schemas.service_output import HealthCheck
 
 router = APIRouter(tags=["Info"])
 

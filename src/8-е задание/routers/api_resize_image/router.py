@@ -10,13 +10,13 @@ from PIL import Image
 from pydantic import TypeAdapter
 
 # project
-from src.schemas.service_config import ServiceConfig
-from src.schemas.service_output import ServiceOutput
-from src.tools.logging_tools import get_logger
+from schemas.service_config import ServiceConfig
+from schemas.service_output import ServiceOutput
+from tools.logging_tools import get_logger
 
 logger = get_logger()
 
-service_config = r"src\configs\service_config.json"
+service_config = r".\configs\service_config.json"
 
 with open(service_config, "r") as json_service_config:
     service_config_dict = json.load(json_service_config)
@@ -24,7 +24,8 @@ with open(service_config, "r") as json_service_config:
 logger.info(f"Конфигурация сервиса: {service_config}")
 
 service_config_adapter = TypeAdapter(ServiceConfig)
-service_config_python = service_config_adapter.validate_python(service_config_dict)
+service_config_python = service_config_adapter.validate_python(
+    service_config_dict)
 
 router = APIRouter(tags=["Main FastAPI service router"], prefix="")
 
@@ -60,7 +61,8 @@ async def resize_image(image: UploadFile = File(...)) -> ServiceOutput:
     resized_cv_image = cv2.resize(cv_image, (target_width, target_height))
 
     logger.info(
-        f"Выполнен ресайз картинки до целевой размерности {target_height, target_width}"
+        f"Выполнен ресайз картинки до целевой размерности {
+            target_height, target_width}"
     )
 
     service_output = ServiceOutput()
