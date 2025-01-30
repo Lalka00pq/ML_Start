@@ -7,12 +7,14 @@ import numpy as np
 import onnxruntime as ort
 from torchvision import transforms
 import io
+import os
 import torch
 import cv2
 router = APIRouter(tags=["Find Objects"])
 
 
-def preprocess_image(input_image):
+def preprocess_image(image_path: str) -> np.ndarray:
+    input_image = Image.open(image_path).convert('RGB')
     preprocess = transforms.Compose([
         transforms.Resize(256),
         transforms.CenterCrop(224),
@@ -47,22 +49,22 @@ def find_objects(
     detector = YOLO(path_to_detector)
     detect_result = detector(image)
     classifier = ort.InferenceSession(path_to_classifier)
-
+    # Начинается работа детектора
     detected_objects = []
     for box in detect_result[0].boxes:
 
         xmin, ymin, xmax, ymax = box.xyxy[0].tolist()
 
         confidence = box.conf.item()
-        if confidence < 0.75:  # Порог доверия
+        if confidence < 0.60:  # Порог доверия
             continue
-
         cropped_object = orig_img[int(ymin):int(ymax), int(xmin):int(xmax)]
+        cropped_image = Image.fromarray(cropped_object)
+        cropped_image.save('cropped_image.jpg')
+    # ------------------------------------------------------------------------------
+    # Начинается работа классификатора
 
-        cropped_image = Image.fromarray(cropped_object).resize((224, 224))
-
-        input_data = preprocess_image(cropped_image)
-        # Классификация объекта
+        input_data = preprocess_image('cropped_image.jpg')
         ort_inputs = classifier.get_inputs()[0].name
         ort_outs = classifier.get_outputs()[0].name
         outputs = classifier.run([ort_outs], {ort_inputs: input_data})

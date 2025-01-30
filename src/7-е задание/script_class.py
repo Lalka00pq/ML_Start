@@ -26,13 +26,13 @@ def arguments_parser() -> argparse.Namespace:
         "--path_to_model", "-pm",
         type=str,
         help="Путь к модели ONNX",
-        default=r'.\model_regnet_best_loss.onnx'
+        default=r'.\model_resnet18_best_loss.onnx'
     )
     parser.add_argument(
         "--path_to_content", "-pc",
         type=str,
         help="Путь к изображению или папке с изображениями",
-        default=r'.\2314c1b5-ec8f-4212-b42f-43365a13fd20_aircraft_1754_35.jpg',
+        default=r'.\boat40_ship_156_123.jpg',
     )
     return parser.parse_args()
 
