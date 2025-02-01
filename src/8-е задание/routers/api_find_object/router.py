@@ -37,13 +37,13 @@ def preprocess_image(image_path: str) -> np.ndarray:
 def find_objects(
         image: UploadFile = File(...),
         path_to_detector: str = r'.\models\detectors\yolo8_detector.onnx',
-        path_to_classifier: str = r'.\models\classifiers\regnet_classifier.onnx',
+        path_to_classifier: str = r'.\models\classifiers\model.onnx',
 ) -> DetectedAndClassifiedObject:
     """Метод поиска объектов на изображении
     Returns:
         Dict[str: str]: Словарь найденных объектов
     """
-    classes_name = ['ship', 'aircraft']
+    classes_name = ['aircraft', 'ship']
     image = Image.open(io.BytesIO(image.file.read())).convert('RGB')
     orig_img = np.array(image)
     detector = YOLO(path_to_detector)
