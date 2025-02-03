@@ -1,19 +1,39 @@
-from fastapi import APIRouter, File, UploadFile, Path
-from typing import Dict
+from fastapi import APIRouter, File, UploadFile
 from schemas.service_output import DetectedAndClassifiedObject, DetectedObject
 from ultralytics import YOLO
 from PIL import Image
+from pydantic import TypeAdapter
+from schemas.service_config import ServiceConfigDetection
 import numpy as np
 import onnxruntime as ort
 from torchvision import transforms
 import io
-import os
-import torch
-import cv2
+import json
+
+from tools.logging_tools import get_logger
+logger = get_logger()
+service_config = r".\configs\service_config.json"
+with open(service_config, "r") as json_service_config:
+    service_config_dict = json.load(json_service_config)
+
+logger.info(f"Конфигурация сервиса: {service_config}")
+
+service_config_adapter = TypeAdapter(ServiceConfigDetection)
+service_config_python = service_config_adapter.validate_python(
+    service_config_dict)
+
 router = APIRouter(tags=["Find Objects"])
 
 
 def preprocess_image(image_path: str) -> np.ndarray:
+    """Предобработка изображения для классификатора
+
+    Args:
+        image_path (str): Путь к изображению
+
+    Returns:
+        np.ndarray: массив изображения
+    """
     input_image = Image.open(image_path).convert('RGB')
     preprocess = transforms.Compose([
         transforms.Resize(256),
@@ -49,6 +69,10 @@ def find_objects(
     detector = YOLO(path_to_detector)
     detect_result = detector(image)
     classifier = ort.InferenceSession(path_to_classifier)
+    logger.info(
+        f"Загружены детектор - {detector.model} и классификатор: {path_to_classifier}"
+    )
+    # ------------------------------------------------------------------------------
     # Начинается работа детектора
     detected_objects = []
     for box in detect_result[0].boxes:
@@ -61,6 +85,8 @@ def find_objects(
         cropped_object = orig_img[int(ymin):int(ymax), int(xmin):int(xmax)]
         cropped_image = Image.fromarray(cropped_object)
         cropped_image.save('cropped_image.jpg')
+        logger.info(
+            f"Обнаружен объект с координатами {xmin, ymin, xmax, ymax}")
     # ------------------------------------------------------------------------------
     # Начинается работа классификатора
 
@@ -72,6 +98,8 @@ def find_objects(
         class_id = np.argmax(outputs[0])
 
         label = classes_name[class_id.item()]
+        logger.info(
+            f"Объект классифицирован как {label} с вероятностью {confidence}")
         detected_objects.append(DetectedObject(
             label=label,
             confidence=confidence,

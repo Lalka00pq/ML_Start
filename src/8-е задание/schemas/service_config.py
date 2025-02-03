@@ -59,3 +59,15 @@ class ClassifierParams(BaseModel):
     classifier_path: str = Field(
         default=r"\models\classifiers\resnet18_classifier.onnx")
     """Путь к файлу классификатора (формат ONNX)"""
+
+
+class ServiceConfigDetection(BaseModel):
+    """Конфигурация сервиса детектирования"""
+    detector_params: DetectorParams = Field(default=DetectorParams())
+    """Параметры детектора"""
+    classifier_params: ClassifierParams = Field(default=ClassifierParams())
+    """Параметры классификатора"""
+    logging_params: LoggingParams = Field(default=LoggingParams())
+    """Параметры логирования"""
+    common_params: CommonParams = Field(default=CommonParams())
+    """Общие настройки сервиса (хост, порт)"""

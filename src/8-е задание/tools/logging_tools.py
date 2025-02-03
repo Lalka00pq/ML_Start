@@ -9,7 +9,7 @@ from rich import console
 from rich.logging import RichHandler
 
 # project
-from schemas.service_config import ServiceConfig
+from schemas.service_config import ServiceConfigDetection
 
 LogLevelTypes: TypeAlias = (
     Literal[
@@ -36,7 +36,7 @@ def get_logger() -> logging.Logger:
 
 
 def configure_service_logger(
-    service_config: ServiceConfig,
+    service_config: ServiceConfigDetection,
     level: LogLevelTypes,
     logfiles_name: str,
 ) -> None:
