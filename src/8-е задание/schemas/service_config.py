@@ -21,7 +21,7 @@ class CommonParams(BaseModel):
     """Порт сервиса"""
 
 
-class ServiceParams(BaseModel):
+class ServiceParams(BaseModel):  # Убрать данный блок
     """Датакласс, описываемый основные параметры сервиса"""
 
     target_width: int = Field(default=1920)

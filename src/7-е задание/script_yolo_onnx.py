@@ -35,7 +35,7 @@ def arguments_parser() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def inference_detector(detector, path_to_image: str) -> np.ndarray:
+def inference_detector(detector: YOLO, path_to_image: str) -> np.ndarray:
     """Метод для интерфейса детектор на единичном изображении
 
     Args:

@@ -99,7 +99,7 @@ def find_objects(
 
         label = classes_name[class_id.item()]
         logger.info(
-            f"Объект классифицирован как {label} с вероятностью {confidence}")
+            f"Объект классифицирован как {label} с вероятностью {round(confidence*100)}%")
         detected_objects.append(DetectedObject(
             label=label,
             confidence=confidence,

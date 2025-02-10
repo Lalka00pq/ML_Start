@@ -16,7 +16,6 @@ def parse_annotations(xml_path: str, img_dir: str, output_dir: str):
     img_dir = Path(img_dir)
     output_dir = Path(output_dir)
 
-    # Ensure output directories exist
     output_dir.mkdir(parents=True, exist_ok=True)
 
     tree = ET.parse(xml_path)
@@ -58,6 +57,7 @@ def parse_annotations(xml_path: str, img_dir: str, output_dir: str):
 if __name__ == "__main__":
     parse_annotations(
         xml_path="ML_Start\\src\\4-е задание\\annotations.xml",
+        # лучше так не указывать пути, лучше делать консоль
         img_dir="C:\\Users\\User\\Desktop\\Data_planes_ships\\aircrafts\\test_airplanes",
         output_dir="C:\\Users\\User\\Desktop"
     )

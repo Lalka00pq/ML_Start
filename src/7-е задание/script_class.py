@@ -72,7 +72,7 @@ def show_image_results(img, classes_name, predicted):
     cv2.waitKey(0)
 
 
-def main():
+def main() -> None:
     args = arguments_parser()
     path_to_model = args.path_to_model
     path_to_image = args.path_to_content

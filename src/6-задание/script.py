@@ -28,7 +28,7 @@ class OpenCVTransform:
         return torch.from_numpy(img)
 
 
-def show_image_results(img: Any) -> None:
+def show_image_results(img: Any) -> None:  # изменить аннотацию типов
     '''Метод для отображения результата детекции изображения
     Args:
         classes_name (list): Список классов
@@ -62,7 +62,7 @@ def inference_detector(detector: str, device: str, path_to_image: str) -> Any:
 
 def load_classifier(
     name_of_detector: str, path_to_pt_weights: str, device: str
-) -> Any:
+) -> Any:  # изменить аннотацию
     """Метод для загрузки детектора
     Args:
         name_of_classifier (str): Название Детектора
@@ -95,8 +95,8 @@ def load_classifier(
 def arguments_parser() -> argparse.Namespace:
     """Парсер аргументов
 
-    Returns:
-        argparse.Namespace: _description_
+    Returns: 
+        argparse.Namespace: _description_ добавить описание
     """
     parser = argparse.ArgumentParser(
         description="Скрипт для выполнения детектора на единичном изображении или папке с изображениями"

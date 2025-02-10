@@ -11,7 +11,7 @@ from pydantic import TypeAdapter
 
 # project
 from tools.logging_tools import configure_service_logger
-from schemas.service_config import ServiceConfig
+from schemas.service_config import ServiceConfigDetection
 
 
 class Server(uvicorn.Server):
@@ -32,7 +32,7 @@ class Server(uvicorn.Server):
 
 
 def get_service(
-    service_config: ServiceConfig,
+    service_config: ServiceConfigDetection,
     num_workers: int = 0,
     reload: bool = True,
 ) -> Server:
@@ -68,7 +68,7 @@ def main() -> None:
     with open(service_config, "r") as json_service_config:
         service_config_dict = json.load(json_service_config)
 
-    service_config_adapter = TypeAdapter(ServiceConfig)
+    service_config_adapter = TypeAdapter(ServiceConfigDetection)
     service_config_python = service_config_adapter.validate_python(
         service_config_dict)
 

@@ -44,6 +44,7 @@ def show_image_results(img: Any, classes_name: list, predicted: Any) -> None:
     print(f"Predicted class: {classes_name[predicted.item()]}")
 
 
+# исправить аннотацию типов
 def inference_classifier(classifier: str, device: str, path_to_image: str) -> str:
     """Метод для инференса классификатора на единичном изображении
 
@@ -93,8 +94,8 @@ def load_classifier(
         print(f'Загружен классификатор {name_of_classifier}')
         classifier = torch.load(path_to_pth_weights)
         classifier.to(device)
-        return classifier, device
-    else:
+        return classifier, device  # исправить данный момент
+    else:  # переделать на исключение
         print(f"Классификатор {name_of_classifier} не найден")
         return None, None
 
