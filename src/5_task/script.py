@@ -104,7 +104,7 @@ def arguments_parser() -> argparse.Namespace:
     """Парсер аргументов
 
     Returns:
-        argparse.Namespace: _description_
+        argparse.Namespace: Аргументы командной строки
     """
     parser = argparse.ArgumentParser(
         description="Скрипт для выполнения классификатора на единичном изображении или папке с изображениями"
