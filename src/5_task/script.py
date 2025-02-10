@@ -4,6 +4,7 @@ from typing import Any
 # 3rdarty
 import cv2
 import torch
+import torchvision
 import numpy as np
 # project
 import os
@@ -45,7 +46,7 @@ def show_image_results(img: Any, classes_name: list, predicted: Any) -> None:
 
 
 # исправить аннотацию типов
-def inference_classifier(classifier: str, device: str, path_to_image: str) -> str:
+def inference_classifier(classifier: str, device: str, path_to_image: str) -> tuple[torch.Tensor, np.ndarray]:
     """Метод для инференса классификатора на единичном изображении
 
     Args:
@@ -70,7 +71,7 @@ def inference_classifier(classifier: str, device: str, path_to_image: str) -> st
 
 def load_classifier(
     name_of_classifier: str, path_to_pth_weights: str, device: str
-) -> Any:
+) -> tuple[torchvision.models.__name__, torch.device]:
     """Метод для загрузки класификатора
     Args:
         name_of_classifier (str): Название классификатора
@@ -86,18 +87,15 @@ def load_classifier(
         device = torch.device("cpu")
         print("CPU доступен")
 
-    available_names = ['resnet18',
-                       'regnet',
-                       'efficientnet',]
     name_of_classifier = name_of_classifier.lower()
-    if name_of_classifier in available_names:
+    try:
         print(f'Загружен классификатор {name_of_classifier}')
         classifier = torch.load(path_to_pth_weights)
         classifier.to(device)
-        return classifier, device  # исправить данный момент
-    else:  # переделать на исключение
-        print(f"Классификатор {name_of_classifier} не найден")
-        return None, None
+        return classifier, device
+    except FileNotFoundError as e:
+        print(f"Ошибка загрузки классификатора: {e}")
+        exit(1)
 
 
 def arguments_parser() -> argparse.Namespace:
@@ -111,23 +109,23 @@ def arguments_parser() -> argparse.Namespace:
     )
     parser.add_argument(
         "--name_of_classifier", "-nc",
-        type=str, help="Название классификатора",
-        choices=['resnet18', 'efficientnet', 'regnet'], default='resnet18'
+        type=str,
+        help="Название классификатора",
+        default='resnet18'
     )
     parser.add_argument(
         "--path_to_weights",
         "-wp",
         type=str,
         help="Путь к PTH-файлу с весами классификатора",
-        default='.\\best_model_ResNet18_2.pth'
+        default=r'.classifier_models\resnet18.pth'
     )
     parser.add_argument(
         "--path_to_content",
         "-cp",
         type=str,
         help="Путь к одиночному изображению/папке с изображениями",
-        # default='.\\boat40_ship_156_123.jpg'
-        default='.\\test_dir'
+        default=r'.\test_dir'
     )
     parser.add_argument(
         "--use_cuda",
