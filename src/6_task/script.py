@@ -1,6 +1,5 @@
 # python
 import argparse
-from typing import Any
 # 3rdarty
 import cv2
 import torch
@@ -28,25 +27,25 @@ class OpenCVTransform:
         return torch.from_numpy(img)
 
 
-def show_image_results(img: Any) -> None:  # изменить аннотацию типов
+def show_image_results(img: np.ndarray) -> None:  # изменить аннотацию типов
     '''Метод для отображения результата детекции изображения
     Args:
-        classes_name (list): Список классов
-        predicted (Any): Предсказание класса
+        img (np.ndarray): Изображение
     Returns: None : Выводит результат детектора на экран
     '''
     cv2.imshow('image', img)
 
 
-def inference_detector(detector: str, device: str, path_to_image: str) -> Any:
+def inference_detector(detector: str, device: str, path_to_image: str) -> np.ndarray:
     """Метод для интерфейса детектор на единичном изображении
 
     Args:
-        classifier (Any): Детектор для получения предсказания
+        detector (str): Детектор для получения предсказания
+        device (str): Устройство для детектора (cuda/cpu)
         path_to_image (str): Путь к изображению
 
     Returns:
-        Any: Изображение
+        np.ndarray: Изображение
     """
     model = detector
     model.to(device)
@@ -60,16 +59,16 @@ def inference_detector(detector: str, device: str, path_to_image: str) -> Any:
     return img_rgb
 
 
-def load_classifier(
+def load_detector(
     name_of_detector: str, path_to_pt_weights: str, device: str
-) -> Any:  # изменить аннотацию
+) -> tuple[YOLO, torch.device]:
     """Метод для загрузки детектора
     Args:
         name_of_classifier (str): Название Детектора
         path_to_pth_weights (str): Путь к PTH-файлу с весами детектора
         device (str): Устройство для детектора (cuda/cpu)
     Returns:
-        Any: Детектор и устройство
+        tuple[YOLO, torch.device]: Детектор и устройство
     """
     if device == "cuda" and torch.cuda.is_available():
         device = torch.device("cuda")
@@ -78,18 +77,16 @@ def load_classifier(
         device = torch.device("cpu")
         print("CPU доступен")
 
-    available_names = ['yolo8',
-                       'yolo10',
-                       'yolo11',]
     name_of_detector = name_of_detector.lower()
-    if name_of_detector in available_names:
+    try:
         print(f'Загружен детектор {name_of_detector}')
         detector = YOLO(path_to_pt_weights)
         detector.to(device)
+
         return detector, device
-    else:
-        print(f"Детектор {name_of_detector} не найден")
-        return None, None
+    except FileNotFoundError as e:
+        print(f"Детектор {name_of_detector} не найден. Ошибка: {e}")
+        exit(1)
 
 
 def arguments_parser() -> argparse.Namespace:
@@ -103,22 +100,22 @@ def arguments_parser() -> argparse.Namespace:
     )
     parser.add_argument(
         "--name_of_detector", "-nd",
-        type=str, help="Название детектора",
-        choices=['yolo8', 'yolo10', 'yolo11'], default='yolo8'
+        type=str, help="Название детектора (по умолчанию - yolo8)",
+        default='yolo8'
     )
     parser.add_argument(
         "--path_to_weights",
         "-wp",
         type=str,
-        help="Путь к PT-файлу с детекторами",
-        default=r'.\best_yolo8.pt'
+        help="Путь к PT-файлу с детекторами (по умолчанию - yolo8s.pt)",
+        default=r'.\yolo8s.pt'
     )
     parser.add_argument(
         "--path_to_content",
         "-cp",
         type=str,
-        help="Путь к одиночному изображению/папке с изображениями",
-        default=r'.\test_dir'        # default=r'.\images.jpg'
+        help="Путь к одиночному изображению/папке с изображениями (папка по умолчанию - test_dir)",
+        default=r'.\test_dir'
     )
     parser.add_argument(
         "--use_cuda",
@@ -132,7 +129,10 @@ def arguments_parser() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Основная логика работы с классификатором"""
+    """Основная логика работы с классификатором
+
+    Returns: None
+    """
     args = arguments_parser()
 
     name_of_detector = args.name_of_detector
@@ -151,9 +151,9 @@ def main() -> None:
         print("Device: CPU")
         device = 'cpu'
 
-    detector, device_ = load_classifier(name_of_detector=name_of_detector,
-                                        path_to_pt_weights=path_to_weights,
-                                        device=device)
+    detector, device_ = load_detector(name_of_detector=name_of_detector,
+                                      path_to_pt_weights=path_to_weights,
+                                      device=device)
 
     if os.path.isfile(args.path_to_content):
         img = inference_detector(detector=detector, device=device_,

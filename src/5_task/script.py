@@ -45,16 +45,18 @@ def show_image_results(img: Any, classes_name: list, predicted: Any) -> None:
     print(f"Predicted class: {classes_name[predicted.item()]}")
 
 
-# исправить аннотацию типов
-def inference_classifier(classifier: str, device: str, path_to_image: str) -> tuple[torch.Tensor, np.ndarray]:
+def inference_classifier(classifier: str,
+                         device: str,
+                         path_to_image: str
+                         ) -> tuple[torch.Tensor, np.ndarray]:
     """Метод для инференса классификатора на единичном изображении
 
     Args:
-        classifier (Any): Классификатор для получения предсказания
-        path_to_image (str): Путь к изображению
-
+        classifier (str): Классификатор для получения предсказания
+        device (str): Устройство для классификатора (cuda/cpu)
+        path_to_image (str): Путь к изображению 
     Returns:
-        str: Название класса объекта на изображении
+        tuple[torch.Tensor, np.ndarray]: Название класса объекта на изображении и изображение
     """
     model = classifier
     model.eval()
