@@ -12,7 +12,8 @@ def arguments_parser() -> argparse.Namespace:
         argparse.Namespace: _description_
     """
     parser = argparse.ArgumentParser(
-        description="Скрипт для выполнения детектора на единичном изображении или папке с изображениями"
+        description="Скрипт для выполнения детектора на\
+              единичном изображении или папке с изображениями"
     )
     parser.add_argument(
         "--name_of_detector", "-nd",
@@ -23,14 +24,14 @@ def arguments_parser() -> argparse.Namespace:
     parser.add_argument(
         "--path_to_model", "-pm",
         type=str,
-        help="Путь к модели ONNX",
-        default=r'.\best_yolo8 copy.onnx'
+        help="Путь к модели ONNX (по умолчанию - best_yolo8.onnx)",
+        default=r'.\detectors_models_onnx\best_yolo8.onnx'
     )
     parser.add_argument(
         "--path_to_content", "-pc",
         type=str,
-        help="Путь к изображению или папке с изображениями",
-        default=r'.\images.jpg',
+        help="Путь к изображению или папке с изображениями (по умолчанию - images.jpg)",
+        default=r'.\test_images\images.jpg',
     )
     return parser.parse_args()
 
@@ -39,7 +40,7 @@ def inference_detector(detector: YOLO, path_to_image: str) -> np.ndarray:
     """Метод для интерфейса детектор на единичном изображении
 
     Args:
-        detector (ort.InferenceSession): Детектор для получения предсказания
+        detector (YOLO): Детектор для получения предсказания
         path_to_image (str): Путь к изображению
 
     Returns:
@@ -60,12 +61,19 @@ def show_image(img: np.ndarray) -> None:
 
     Args:
         img (np.ndarray): Изображение
+
+    Returns:
+        None
     """
     cv2.imshow('Image', img)
 
 
 def main() -> None:
-    """Основная логика работы с классификатором"""
+    """Основная логика работы с детектором
+
+    Returns:
+        None
+    """
     args = arguments_parser()
     name_of_detector = args.name_of_detector
     path_to_weights = args.path_to_model

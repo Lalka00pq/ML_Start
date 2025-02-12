@@ -45,7 +45,7 @@ def inference_detector(detector: str, device: str, path_to_image: str) -> np.nda
         path_to_image (str): Путь к изображению
 
     Returns:
-        np.ndarray: Изображение
+        img_rgb (np.ndarray): Изображение
     """
     model = detector
     model.to(device)
@@ -64,7 +64,7 @@ def load_detector(
 ) -> tuple[YOLO, torch.device]:
     """Метод для загрузки детектора
     Args:
-        name_of_classifier (str): Название Детектора
+        name_of_detector (str): Название Детектора
         path_to_pth_weights (str): Путь к PTH-файлу с весами детектора
         device (str): Устройство для детектора (cuda/cpu)
     Returns:
@@ -93,10 +93,11 @@ def arguments_parser() -> argparse.Namespace:
     """Парсер аргументов
 
     Returns: 
-        argparse.Namespace: _description_ добавить описание
+        argparse.Namespace: Аргументы командной строки
     """
     parser = argparse.ArgumentParser(
-        description="Скрипт для выполнения детектора на единичном изображении или папке с изображениями"
+        description="Скрипт для выполнения детектора на \
+            единичном изображении или папке с изображениями"
     )
     parser.add_argument(
         "--name_of_detector", "-nd",
@@ -108,13 +109,14 @@ def arguments_parser() -> argparse.Namespace:
         "-wp",
         type=str,
         help="Путь к PT-файлу с детекторами (по умолчанию - yolo8s.pt)",
-        default=r'.\yolo8s.pt'
+        default=r'.\detectors_models\yolo8s.pt'
     )
     parser.add_argument(
         "--path_to_content",
         "-cp",
         type=str,
-        help="Путь к одиночному изображению/папке с изображениями (папка по умолчанию - test_dir)",
+        help="Путь к одиночному изображению/папке с изображениями\
+            (папка по умолчанию - test_dir)",
         default=r'.\test_dir'
     )
     parser.add_argument(
@@ -140,9 +142,9 @@ def main() -> None:
     path_to_content = args.path_to_content
     use_cuda = args.use_cuda
 
-    print(f"Название классификатора: {name_of_detector}")
+    print(f"Название детектора: {name_of_detector}")
     print(f"Путь к файлам: {path_to_content}")
-    print(f"Путь к классификатору модели: {path_to_weights}")
+    print(f"Путь к детектору модели: {path_to_weights}")
 
     if use_cuda:
         print("Device: CUDA")
