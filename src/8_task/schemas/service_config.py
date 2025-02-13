@@ -21,26 +21,6 @@ class CommonParams(BaseModel):
     """Порт сервиса"""
 
 
-class ServiceParams(BaseModel):  # Убрать данный блок
-    """Датакласс, описываемый основные параметры сервиса"""
-
-    target_width: int = Field(default=1920)
-    """Целевая ширина изображения"""
-    target_height: int = Field(default=1080)
-    """Целевая высота изображения"""
-
-
-class ServiceConfig(BaseModel):
-    """Конфигурация сервиса"""
-
-    service_params: ServiceParams = Field(default=ServiceParams())
-    """Основные параметры сервиса"""
-    logging_params: LoggingParams = Field(default=LoggingParams())
-    """Параметры логирования"""
-    common_params: CommonParams = Field(default=CommonParams())
-    """Общие настройки сервиса (хост, порт)"""
-
-
 class DetectorParams(BaseModel):
     """Датакласс, описывающий параметры детектора"""
 
@@ -61,8 +41,27 @@ class ClassifierParams(BaseModel):
     """Путь к файлу классификатора (формат ONNX)"""
 
 
+class ServiceParams(BaseModel):
+    """Датакласс, описываемый основные параметры сервиса"""
+
+    confidence: float = Field(default=0.75)
+    """Коэффициент доверия"""
+
+
+class ServiceConfig(BaseModel):
+    """Конфигурация сервиса"""
+
+    service_params: ServiceParams = Field(default=ServiceParams())
+    """Основные параметры сервиса"""
+    logging_params: LoggingParams = Field(default=LoggingParams())
+    """Параметры логирования"""
+    common_params: CommonParams = Field(default=CommonParams())
+    """Общие настройки сервиса (хост, порт)"""
+
+
 class ServiceConfigDetection(BaseModel):
     """Конфигурация сервиса детектирования"""
+    service_params: ServiceParams = Field(default=ServiceParams())
     detector_params: DetectorParams = Field(default=DetectorParams())
     """Параметры детектора"""
     classifier_params: ClassifierParams = Field(default=ClassifierParams())

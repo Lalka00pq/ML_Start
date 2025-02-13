@@ -7,7 +7,6 @@ from fastapi import FastAPI
 
 # project
 from routers.api_info import router as InfoRouter
-from routers.api_resize_image import router as ResizeImageRouter
 from routers.api_get_detector_classifier import router_detect as DetectorRouter
 from routers.api_get_detector_classifier import router_classifier as ClassifierRouter
 from routers.api_find_object import router as FindObject
@@ -26,7 +25,6 @@ app = FastAPI(
 api_v1_prefix = ""
 
 app.include_router(InfoRouter, prefix=api_v1_prefix)
-app.include_router(ResizeImageRouter, prefix=api_v1_prefix)
 app.include_router(DetectorRouter, prefix=api_v1_prefix)
 app.include_router(ClassifierRouter, prefix=api_v1_prefix)
 app.include_router(FindObject, prefix=api_v1_prefix)

@@ -15,25 +15,20 @@ class HealthCheck(pydantic.BaseModel):
     """Отсечка даты и времени"""
 
 
-class ServiceOutput(pydantic.BaseModel):
-    """Датаконтракт выхода сервиса"""
-
-    width: int = pydantic.Field(default=640)
-    """Ширина преобразованного изображения"""
-    height: int = pydantic.Field(default=480)
-    """Высота преобразованного изображения"""
-    channels: int = pydantic.Field(default=3)
-    """Число каналов преобразованного изображения"""
-
-
 class DetectedObject(pydantic.BaseModel):
     '''Датакласс для описания найденного объекта'''
     label: str
+    '''Название объекта'''
     confidence: float
+    '''Вероятность детекции'''
     xmin: int
+    '''Координата x левого верхнего угла'''
     ymin: int
+    '''Координата y левого верхнего угла'''
     xmax: int
+    '''Координата x правого нижнего угла'''
     ymax: int
+    '''Координата y правого нижнего угла'''
 
 
 class DetectedAndClassifiedObject(pydantic.BaseModel):

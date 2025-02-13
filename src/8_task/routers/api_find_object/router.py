@@ -9,6 +9,7 @@ import onnxruntime as ort
 from torchvision import transforms
 import io
 import json
+import os
 
 from tools.logging_tools import get_logger
 logger = get_logger()
@@ -22,7 +23,7 @@ service_config_adapter = TypeAdapter(ServiceConfigDetection)
 service_config_python = service_config_adapter.validate_python(
     service_config_dict)
 
-router = APIRouter(tags=["Find Objects"])
+router = APIRouter(tags=["Find Objects"], prefix="")
 
 
 def preprocess_image(image_path: str) -> np.ndarray:
@@ -57,7 +58,7 @@ def preprocess_image(image_path: str) -> np.ndarray:
 def find_objects(
         image: UploadFile = File(...),
         path_to_detector: str = r'.\models\detectors\yolo8_detector.onnx',
-        path_to_classifier: str = r'.\models\classifiers\model.onnx',
+        path_to_classifier: str = r'.\models\classifiers\resnet18_classifier.onnx',
 ) -> DetectedAndClassifiedObject:
     """Метод поиска объектов на изображении
     Returns:
@@ -80,7 +81,7 @@ def find_objects(
         xmin, ymin, xmax, ymax = box.xyxy[0].tolist()
 
         confidence = box.conf.item()
-        if confidence < 0.60:  # Порог доверия
+        if confidence < service_config_python.service_params.confidence:  # Порог доверия
             continue
         cropped_object = orig_img[int(ymin):int(ymax), int(xmin):int(xmax)]
         cropped_image = Image.fromarray(cropped_object)
@@ -91,6 +92,8 @@ def find_objects(
     # Начинается работа классификатора
 
         input_data = preprocess_image('cropped_image.jpg')
+        if os.path.exists('cropped_image.jpg'):
+            os.remove('cropped_image.jpg')
         ort_inputs = classifier.get_inputs()[0].name
         ort_outs = classifier.get_outputs()[0].name
         outputs = classifier.run([ort_outs], {ort_inputs: input_data})

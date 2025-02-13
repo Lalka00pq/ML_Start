@@ -1,7 +1,8 @@
 {
     "service_params": {   
-        "target_width": 1920,
-        "target_height": 1080
+        "confidence": 0.75,
+        "available_detectors": ["yolo8_detector", "yolo10n_detector" ,"yolo11_detector"],
+        "default_classifiers": ["efficientnet_classifier", "regnet_classifier", "resnet18_classifier"] 
     }, 
     "logging_params": {
         "save_logs": false,
