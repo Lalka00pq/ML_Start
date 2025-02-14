@@ -1,8 +1,13 @@
 {
     "service_params": {   
         "confidence": 0.75,
-        "available_detectors": ["yolo8_detector", "yolo10n_detector" ,"yolo11_detector"],
-        "default_classifiers": ["efficientnet_classifier", "regnet_classifier", "resnet18_classifier"] 
+        "available_detectors": {"yolo8_detector":".\\models\\detectors\\yolo8_detector.onnx",
+                                "yolo10n_detector":".\\models\\detectors\\yolo10n_detector.onnx",
+                                "yolo11_detector":".\\models\\detectors\\yolo11_detector.onnx"},
+
+        "available_classifiers": {"efficientnet_classifier":".\\models\\classifiers\\efficientnet_classifier.onnx",
+                                  "regnet_classifier":".\\models\\classifiers\\regnet_classifier.onnx",
+                                  "resnet18_classifier":".\\models\\classifiers\\resnet18_classifier.onnx"} 
     }, 
     "logging_params": {
         "save_logs": false,

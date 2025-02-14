@@ -3,7 +3,7 @@ from schemas.service_output import DetectedAndClassifiedObject, DetectedObject
 from ultralytics import YOLO
 from PIL import Image
 from pydantic import TypeAdapter
-from schemas.service_config import ServiceConfigDetection
+from schemas.service_config import ServiceConfig
 import numpy as np
 import onnxruntime as ort
 from torchvision import transforms
@@ -19,7 +19,7 @@ with open(service_config, "r") as json_service_config:
 
 logger.info(f"Конфигурация сервиса: {service_config}")
 
-service_config_adapter = TypeAdapter(ServiceConfigDetection)
+service_config_adapter = TypeAdapter(ServiceConfig)
 service_config_python = service_config_adapter.validate_python(
     service_config_dict)
 
@@ -57,8 +57,11 @@ def preprocess_image(image_path: str) -> np.ndarray:
     response_model=DetectedAndClassifiedObject)
 def find_objects(
         image: UploadFile = File(...),
-        path_to_detector: str = r'.\models\detectors\yolo8_detector.onnx',
-        path_to_classifier: str = r'.\models\classifiers\resnet18_classifier.onnx',
+        path_to_detector: str = service_config_python.service_params.available_detectors[
+            'yolo8_detector'],
+        path_to_classifier: str = service_config_python.service_params.available_classifiers[
+            'efficientnet_classifier'],
+        input_confidence: float = service_config_python.service_params.confidence
 ) -> DetectedAndClassifiedObject:
     """Метод поиска объектов на изображении
     Returns:
@@ -81,7 +84,7 @@ def find_objects(
         xmin, ymin, xmax, ymax = box.xyxy[0].tolist()
 
         confidence = box.conf.item()
-        if confidence < service_config_python.service_params.confidence:  # Порог доверия
+        if confidence < input_confidence:  # Порог доверия
             continue
         cropped_object = orig_img[int(ymin):int(ymax), int(xmin):int(xmax)]
         cropped_image = Image.fromarray(cropped_object)
