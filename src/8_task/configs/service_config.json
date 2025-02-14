@@ -1,14 +1,31 @@
 {
     "service_params": {   
-        "confidence": 0.75,
-        "available_detectors": {"yolo8_detector":".\\models\\detectors\\yolo8_detector.onnx",
-                                "yolo10n_detector":".\\models\\detectors\\yolo10n_detector.onnx",
-                                "yolo11_detector":".\\models\\detectors\\yolo11_detector.onnx"},
-
-        "available_classifiers": {"efficientnet_classifier":".\\models\\classifiers\\efficientnet_classifier.onnx",
-                                  "regnet_classifier":".\\models\\classifiers\\regnet_classifier.onnx",
-                                  "resnet18_classifier":".\\models\\classifiers\\resnet18_classifier.onnx"} 
-    }, 
+        "confidence": 0.75 
+    },
+    "detector_Yolo8":{
+            "name": "yolo8_detector",
+            "model_path": ".\\models\\detectors\\yolo8_detector.onnx"
+    },
+    "detector_Yolo10n":{
+            "name": "yolo10n_detector",
+            "model_path": ".\\models\\detectors\\yolo10n_detector.onnx"
+    },
+    "detector_Yolo11":{
+            "name": "yolo11_detector",
+            "model_path": ".\\models\\detectors\\yolo11_detector.onnx"
+    },
+    "classifier_ResNet18":{
+            "name": "resnet18_classifier",
+            "model_path": ".\\models\\classifiers\\resnet18_classifier.onnx"
+    },
+    "classifier_RegNet":{
+            "name": "regnet_classifier",
+            "model_path": ".\\models\\classifiers\\resnet_classifier.onnx"
+    },
+    "classsifier_EfficientNet":{
+            "name": "efficientnet_classifier",
+            "model_path": ".\\models\\classifiers\\efficientnet_classifier.onnx"
+    },
     "logging_params": {
         "save_logs": false,
         "logs_directory": ".\\logs",

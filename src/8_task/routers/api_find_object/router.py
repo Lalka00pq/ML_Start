@@ -57,16 +57,20 @@ def preprocess_image(image_path: str) -> np.ndarray:
     response_model=DetectedAndClassifiedObject)
 def find_objects(
         image: UploadFile = File(...),
-        path_to_detector: str = service_config_python.service_params.available_detectors[
-            'yolo8_detector'],
-        path_to_classifier: str = service_config_python.service_params.available_classifiers[
-            'efficientnet_classifier'],
+        detector_name: str = service_config_python.detector_Yolo8.name,
+        classifier_name: str = service_config_python.classifier_ResNet18.name,
         input_confidence: float = service_config_python.service_params.confidence
 ) -> DetectedAndClassifiedObject:
     """Метод поиска объектов на изображении
     Returns:
         Dict[str: str]: Словарь найденных объектов
     """
+    detector_name = detector_name.tolower()
+    classifier_name = classifier_name.tolower()
+    path_to_detector = service_config_python.service_params.available_detectors[
+        detector_name]
+    path_to_classifier = service_config_python.service_params.available_classifiers[
+        classifier_name]
     classes_name = ['aircraft', 'ship']
     image = Image.open(io.BytesIO(image.file.read())).convert('RGB')
     orig_img = np.array(image)

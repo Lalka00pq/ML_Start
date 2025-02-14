@@ -25,25 +25,25 @@ class ServiceParams(BaseModel):
     """Датакласс, описываемый основные параметры сервиса"""
 
     confidence: float = Field(default=0.75)
-    """Коэффициент доверия"""
-    available_detectors: dict = Field(default={
-        'yolo8_detector': r'.\models\detectors\yolo8_detector.onnx',
-        'yolo10n_detector': r'.\models\detectors\yolo10n_detector.onnx',
-        'yolo11_detector': r'.\models\detectors\yolo11_detector.onnx',
-    })
-    '''Параметры детекторов'''
-    available_classifiers: dict = Field(default={
-        'efficientnet_classifier': r'.\models\classifiers\efficientnet_classifier.onnx',
-        'regnet_classifier': r'.\models\classifiers\regnet_classifier.onnx',
-        'resnet18_classifier': r'.\models\classifiers\resnet18_classifier.onnx',
-    })
-    """Параметры классификаторов"""
+
+
+class ModelParams(BaseModel):
+    """Датакласс, описывающий параметры детектора"""
+    name: str = Field(default="yolo8_detector")
+    """Название модели"""
+    model_path: str = Field(
+        default=r".\models\detectors\yolo8_detector.onnx")
+    """Путь к модели"""
 
 
 class ServiceConfig(BaseModel):
     """Конфигурация сервиса детектирования"""
     service_params: ServiceParams = Field(default=ServiceParams())
     """Основные параметры сервиса"""
+    detector_Yolo8: ModelParams = Field(ModelParams)
+    """Параметры детекторов"""
+    classifier_ResNet18: ModelParams = Field(ModelParams)
+    """Параметры классификаторов"""
     logging_params: LoggingParams = Field(default=LoggingParams())
     """Параметры логирования"""
     common_params: CommonParams = Field(default=CommonParams())
