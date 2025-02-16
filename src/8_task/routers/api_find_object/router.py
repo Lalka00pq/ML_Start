@@ -65,12 +65,10 @@ def find_objects(
     Returns:
         Dict[str: str]: Словарь найденных объектов
     """
-    detector_name = detector_name.tolower()
-    classifier_name = classifier_name.tolower()
-    path_to_detector = service_config_python.service_params.available_detectors[
-        detector_name]
-    path_to_classifier = service_config_python.service_params.available_classifiers[
-        classifier_name]
+    detector_name = detector_name.lower()
+    classifier_name = classifier_name.lower()
+    path_to_detector = service_config_python.detector_Yolo8.model_path
+    path_to_classifier = service_config_python.classifier_ResNet18.model_path
     classes_name = ['aircraft', 'ship']
     image = Image.open(io.BytesIO(image.file.read())).convert('RGB')
     orig_img = np.array(image)
